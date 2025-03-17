@@ -55,3 +55,37 @@ INSERT INTO parking_slots (slot_number, location, is_available) VALUES
 ('J2', 'Jamuna Future Park', TRUE),
 ...
 ('J50', 'Jamuna Future Park', TRUE);
+
+
+
+-- update this ---
+
+
+ALTER TABLE parking_slots ADD COLUMN vehicle_type ENUM('bike', 'car') NOT NULL;
+-- Add bike slots for Bashundhara Shopping Mall
+INSERT INTO parking_slots (slot_number, location, vehicle_type, is_available) VALUES
+('B1', 'Bashundhara Shopping Mall', 'bike', TRUE),
+('B2', 'Bashundhara Shopping Mall', 'bike', TRUE),
+...
+('B25', 'Bashundhara Shopping Mall', 'bike', TRUE);
+
+-- Add car slots for Bashundhara Shopping Mall
+INSERT INTO parking_slots (slot_number, location, vehicle_type, is_available) VALUES
+('C1', 'Bashundhara Shopping Mall', 'car', TRUE),
+('C2', 'Bashundhara Shopping Mall', 'car', TRUE),
+...
+('C25', 'Bashundhara Shopping Mall', 'car', TRUE);
+
+-- Add bike slots for Jamuna Future Park
+INSERT INTO parking_slots (slot_number, location, vehicle_type, is_available) VALUES
+('J1', 'Jamuna Future Park', 'bike', TRUE),
+('J2', 'Jamuna Future Park', 'bike', TRUE),
+...
+('J25', 'Jamuna Future Park', 'bike', TRUE);
+
+-- Add car slots for Jamuna Future Park
+INSERT INTO parking_slots (slot_number, location, vehicle_type, is_available) VALUES
+('K1', 'Jamuna Future Park', 'car', TRUE),
+('K2', 'Jamuna Future Park', 'car', TRUE),
+...
+('K25', 'Jamuna Future Park', 'car', TRUE);

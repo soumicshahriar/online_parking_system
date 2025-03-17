@@ -19,37 +19,26 @@ if ($conn->connect_error) {
     die("Connection failed: " . $conn->connect_error);
 }
 
-// Fetch available parking slots for the selected area, date, and time
+// Fetch available parking slots for the selected area, date, time, duration, and vehicle type
 $selected_area = isset($_GET['area']) ? $_GET['area'] : 'Bashundhara Shopping Mall';
 $selected_date = isset($_GET['date']) ? $_GET['date'] : date('Y-m-d');
 $selected_time = isset($_GET['time']) ? $_GET['time'] : date('H:i');
 $selected_duration = isset($_GET['duration']) ? $_GET['duration'] : 1;
+$selected_vehicle_type = isset($_GET['vehicle_type']) ? $_GET['vehicle_type'] : 'car';
 
 // Calculate end time
 $end_time = date('H:i', strtotime("+$selected_duration hours", strtotime($selected_time)));
 
 // Fetch available slots
-// $slots = [];
-// $query = "SELECT * FROM parking_slots WHERE location = '$selected_area' AND id NOT IN (
-//     SELECT slot_id FROM bookings WHERE booking_date = '$selected_date' AND (
-//         (booking_time <= '$selected_time' AND end_time > '$selected_time') OR
-//         (booking_time < '$end_time' AND end_time >= '$end_time') OR
-//         (booking_time >= '$selected_time' AND end_time <= '$end_time')
-//     )
-// )";
-// $result = $conn->query($query);
-
-// Fetch available slots
 $slots = [];
-$query = "SELECT * FROM parking_slots WHERE location = '$selected_area' AND id NOT IN (
+$query = "SELECT * FROM parking_slots WHERE location = '$selected_area' AND vehicle_type = '$selected_vehicle_type' AND id NOT IN (
     SELECT slot_id FROM bookings 
     WHERE booking_date = '$selected_date' 
     AND (
         ('$selected_time' < end_time AND '$end_time' > booking_time) 
     )
 )";
-$result = $conn->query($query); 
-
+$result = $conn->query($query);
 
 if (!$result) {
     die("Query failed: " . $conn->error); // Debug query error
@@ -60,7 +49,7 @@ if ($result->num_rows > 0) {
         $slots[] = $row;
     }
 } else {
-    echo "No available slots found in $selected_area for the selected date and time."; // Debug no slots found
+    echo "No available slots found in $selected_area for the selected date, time, and vehicle type."; // Debug no slots found
 }
 
 $conn->close();
@@ -101,6 +90,15 @@ $conn->close();
             </select>
         </div>
 
+        <!-- Vehicle Type Dropdown -->
+        <div class="mb-6">
+            <label class="block text-gray-700">Select Vehicle Type</label>
+            <select id="vehicle-type-select" class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                <option value="car">Car</option>
+                <option value="bike">Bike</option>
+            </select>
+        </div>
+
         <!-- Date and Time Selection -->
         <div class="mb-6 grid grid-cols-1 md:grid-cols-3 gap-4">
             <div>
@@ -129,6 +127,7 @@ $conn->close();
                     <div class="bg-white p-6 rounded-lg shadow-md">
                         <h3 class="text-xl font-bold mb-2">Slot <?php echo $slot['slot_number']; ?></h3>
                         <p class="text-gray-600 mb-4">Location: <?php echo $slot['location']; ?></p>
+                        <p class="text-gray-600 mb-4">Type: <?php echo ucfirst($slot['vehicle_type']); ?></p>
                         <button onclick="bookSlot(<?php echo $slot['id']; ?>)" class="w-full bg-blue-600 text-white py-2 px-4 rounded-lg hover:bg-blue-700">
                             Book Now
                         </button>
@@ -215,23 +214,26 @@ $conn->close();
             });
         });
 
-        // Reload slots when area, date, time, or duration is changed
-        $('#area-select, #date-select, #time-select, #duration-select').change(function () {
+        // Reload slots when area, vehicle type, date, time, or duration is changed
+        $('#area-select, #vehicle-type-select, #date-select, #time-select, #duration-select').change(function () {
             const selectedArea = $('#area-select').val();
+            const selectedVehicleType = $('#vehicle-type-select').val();
             const selectedDate = $('#date-select').val();
             const selectedTime = $('#time-select').val();
             const selectedDuration = $('#duration-select').val();
-            window.location.href = `index.php?area=${selectedArea}&date=${selectedDate}&time=${selectedTime}&duration=${selectedDuration}`;
+            window.location.href = `index.php?area=${selectedArea}&vehicle_type=${selectedVehicleType}&date=${selectedDate}&time=${selectedTime}&duration=${selectedDuration}`;
         });
 
-        // Set the selected area, date, time, and duration in the inputs
+        // Set the selected area, vehicle type, date, time, and duration in the inputs
         const urlParams = new URLSearchParams(window.location.search);
         const selectedArea = urlParams.get('area') || 'Bashundhara Shopping Mall';
+        const selectedVehicleType = urlParams.get('vehicle_type') || 'car';
         const selectedDate = urlParams.get('date') || '<?php echo date('Y-m-d'); ?>';
         const selectedTime = urlParams.get('time') || '<?php echo date('H:i'); ?>';
         const selectedDuration = urlParams.get('duration') || 1;
 
         $('#area-select').val(selectedArea);
+        $('#vehicle-type-select').val(selectedVehicleType);
         $('#date-select').val(selectedDate);
         $('#time-select').val(selectedTime);
         $('#duration-select').val(selectedDuration);
