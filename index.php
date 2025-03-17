@@ -9,7 +9,7 @@ if (!isset($_SESSION['user_id'])) {
 
 // Database connection
 $host = 'localhost';
-$db   = 'online_parking';
+$db = 'online_parking';
 $user = 'root';
 $pass = '';
 $conn = new mysqli($host, $user, $pass, $db);
@@ -35,7 +35,7 @@ $query = "SELECT * FROM parking_slots WHERE location = '$selected_area' AND vehi
     SELECT slot_id FROM bookings 
     WHERE booking_date = '$selected_date' 
     AND (
-        ('$selected_time' < end_time AND '$end_time' > booking_time) OR
+        ('$selected_time' < end_time AND '$end_time' > booking_time) or
         ('$selected_time' > end_time AND '$end_time' < booking_time)
     )
 )";
@@ -58,25 +58,73 @@ $conn->close();
 
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Parking Dashboard</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+    <!-- daisy UI -->
+    <link href="https://cdn.jsdelivr.net/npm/daisyui@5" rel="stylesheet" type="text/css" />
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+
+
 </head>
-<body class="bg-gray-100">
+
+<body class="bg-gray-100 relative">
     <!-- Navbar -->
-    <nav class="bg-white shadow-lg">
+    <!-- <nav class="bg-white shadow-lg">
         <div class="max-w-6xl mx-auto px-4">
             <div class="flex justify-between items-center py-4">
                 <div class="text-2xl font-bold text-blue-600">ParkEase</div>
                 <div>
+                    <a href="index.php" class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700">Home</a>
+                    <a href="book_slot.php" class="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700">Book Slot</a>
+                    <a href="history.php" class="bg-yellow-600 text-white px-4 py-2 rounded-lg hover:bg-yellow-700">History</a>
+                    <a href="profile.php" class="bg-purple-600 text-white px-4 py-2 rounded-lg hover:bg-purple-700">Profile</a>
                     <a href="logout.php" class="bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-red-700">Logout</a>
                 </div>
             </div>
         </div>
-    </nav>
+
+
+    </nav> -->
+
+
+    <div class="navbar bg-base-100 shadow-sm sticky top-0">
+        <div class="navbar-start">
+            <div class="dropdown">
+                <div tabindex="0" role="button" class="btn btn-ghost lg:hidden">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
+                        stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M4 6h16M4 12h8m-8 6h16" />
+                    </svg>
+                </div>
+                <ul tabindex="0" class="menu menu-sm dropdown-content bg-base-100 rounded-box z-1 mt-3 w-52 p-2 shadow">
+                    <li><a href="index.php" class="bg-blue-600 text-white px-4 py-2 mb-2 rounded-lg hover:bg-blue-700">Home</a></li>
+                    <li><a href="book_slot.php" class="bg-green-600 text-white px-4 py-2 mb-2 rounded-lg hover:bg-green-700">Book Slot</a></li>
+                    <li><a href="history.php" class="bg-yellow-600 text-white px-4 py-2 mb-2 rounded-lg hover:bg-yellow-700">History</a></li>
+                    <li><a href="profile.php" class="bg-purple-600 text-white px-4 py-2 mb-2 rounded-lg hover:bg-purple-700">Profile</a></li>
+                </ul>
+            </div>
+            <a class="btn btn-ghost text-xl">ParkEase</a>
+        </div>
+
+        <div class="navbar-end">
+            <div class="navbar-center hidden lg:flex">
+                <ul class="menu menu-horizontal">
+                    <li><a href="index.php" class="bg-blue-600 text-white px-4 py-2 mr-2 rounded-lg hover:bg-blue-700">Home</a></li>
+                    <li><a href="book_slot.php" class="bg-green-600 text-white px-4 py-2 mr-2 rounded-lg hover:bg-green-700">Book Slot</a></li>
+                    <li><a href="history.php" class="bg-yellow-600 text-white px-4 py-2 mr-2 rounded-lg hover:bg-yellow-700">History</a></li>
+                    <li><a href="profile.php" class="bg-purple-600 text-white px-4 py-2 mr-2 rounded-lg hover:bg-purple-700">Profile</a></li>
+                </ul>
+            </div>
+            <a href="logout.php" class="bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-red-700">Logout</a>
+        </div>
+    </div>
 
     <!-- Dashboard -->
     <div class="max-w-6xl mx-auto px-4 py-8">
@@ -85,7 +133,8 @@ $conn->close();
         <!-- Area Selection Dropdown -->
         <div class="mb-6">
             <label class="block text-gray-700">Select Area</label>
-            <select id="area-select" class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+            <select id="area-select"
+                class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
                 <option value="Bashundhara Shopping Mall">Bashundhara Shopping Mall</option>
                 <option value="Jamuna Future Park">Jamuna Future Park</option>
             </select>
@@ -94,7 +143,8 @@ $conn->close();
         <!-- Vehicle Type Dropdown -->
         <div class="mb-6">
             <label class="block text-gray-700">Select Vehicle Type</label>
-            <select id="vehicle-type-select" class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+            <select id="vehicle-type-select"
+                class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
                 <option value="car">Car</option>
                 <option value="bike">Bike</option>
             </select>
@@ -130,7 +180,8 @@ $conn->close();
                         <p class="text-gray-600 mb-4">Location: <?php echo $slot['location']; ?></p>
                         <p class="text-gray-600 mb-4">Type: <?php echo ucfirst($slot['vehicle_type']); ?></p>
                         <p class="text-gray-600 mb-4">Cost: $<?php echo $slot['cost_per_hour']; ?> per hour</p>
-                        <button onclick="bookSlot(<?php echo $slot['id']; ?>, <?php echo $slot['cost_per_hour']; ?>)" class="w-full bg-blue-600 text-white py-2 px-4 rounded-lg hover:bg-blue-700">
+                        <button onclick="bookSlot(<?php echo $slot['id']; ?>, <?php echo $slot['cost_per_hour']; ?>)"
+                            class="w-full bg-blue-600 text-white py-2 px-4 rounded-lg hover:bg-blue-700">
                             Book Now
                         </button>
                     </div>
@@ -140,8 +191,9 @@ $conn->close();
     </div>
 
     <!-- Booking Modal -->
-    <div id="booking-modal" class="fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center">
-        <div class="bg-white p-8 rounded-lg w-96">
+    <div id="booking-modal"
+        class="fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center overflow-y-scroll">
+        <div class="bg-white p-10 rounded-lg w-96 ">
             <h2 class="text-2xl font-bold mb-6">Book Parking Slot</h2>
             <form id="booking-form">
                 <input type="hidden" id="slot-id" name="slot_id">
@@ -171,12 +223,23 @@ $conn->close();
                     <input type="text" id="total-cost" readonly
                         class="w-full px-4 py-2 border rounded-lg bg-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500">
                 </div>
-                <button type="submit"
-                    class="w-full bg-blue-600 text-white py-2 px-4 rounded-lg hover:bg-blue-700">
+                <!-- bKash Payment Section -->
+                <div class="mb-4">
+                    <label class="block text-gray-700">bKash Number</label>
+                    <input type="text" id="bkash-number" name="bkash_number" required
+                        class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                </div>
+                <div class="mb-4">
+                    <label class="block text-gray-700">bKash PIN</label>
+                    <input type="password" id="bkash-pin" name="bkash_pin" required
+                        class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                </div>
+                <button type="submit" class="w-full bg-blue-600 text-white py-2 px-4 rounded-lg hover:bg-blue-700">
                     Confirm Booking
                 </button>
             </form>
-            <button onclick="closeModal()" class="w-full bg-gray-600 text-white py-2 px-4 rounded-lg mt-4 hover:bg-gray-700">
+            <button onclick="closeModal()"
+                class="w-full bg-gray-600 text-white py-2 px-4 rounded-lg mt-4 hover:bg-gray-700">
                 Cancel
             </button>
         </div>
@@ -208,27 +271,39 @@ $conn->close();
         }
 
         // Handle booking form submission
-        $('#booking-form').submit(function (e) {
+        $('#booking-form').submit(function(e) {
             e.preventDefault();
             const formData = $(this).serialize();
+
+            // Simulate bKash payment
+            const bkashNumber = $('#bkash-number').val();
+            const bkashPin = $('#bkash-pin').val();
+
+            if (!bkashNumber || !bkashPin) {
+                alert('Please enter your bKash number and PIN.');
+                return;
+            }
+
+            // Simulate payment success
+            alert('Payment successful! Confirming your booking...');
 
             $.ajax({
                 url: 'book_slot.php',
                 type: 'POST',
                 data: formData,
-                success: function (response) {
+                success: function(response) {
                     alert(response);
                     closeModal();
                     location.reload(); // Refresh the page to update slot availability
                 },
-                error: function () {
+                error: function() {
                     alert('An error occurred. Please try again.');
                 }
             });
         });
 
         // Reload slots when area, vehicle type, date, time, or duration is changed
-        $('#area-select, #vehicle-type-select, #date-select, #time-select, #duration-select').change(function () {
+        $('#area-select, #vehicle-type-select, #date-select, #time-select, #duration-select').change(function() {
             const selectedArea = $('#area-select').val();
             const selectedVehicleType = $('#vehicle-type-select').val();
             const selectedDate = $('#date-select').val();
@@ -252,4 +327,5 @@ $conn->close();
         $('#duration-select').val(selectedDuration);
     </script>
 </body>
+
 </html>

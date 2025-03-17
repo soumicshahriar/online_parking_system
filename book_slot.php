@@ -27,14 +27,16 @@ $booking_date = $_POST['booking_date'];
 $booking_time = $_POST['booking_time'];
 $duration = $_POST['duration'];
 $cost_per_hour = $_POST['cost_per_hour'];
+$bkash_number = $_POST['bkash_number'];
+$bkash_pin = $_POST['bkash_pin'];
 
 // Calculate end time and total cost
 $end_time = date('H:i', strtotime("+$duration hours", strtotime($booking_time)));
 $total_cost = $cost_per_hour * $duration;
 
 // Insert booking into database
-$stmt = $conn->prepare("INSERT INTO bookings (user_id, slot_id, vehicle_number, booking_date, booking_time, duration, end_time, cost_per_hour, total_cost) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)");
-$stmt->bind_param("iisssisdd", $user_id, $slot_id, $vehicle_number, $booking_date, $booking_time, $duration, $end_time, $cost_per_hour, $total_cost);
+$stmt = $conn->prepare("INSERT INTO bookings (user_id, slot_id, vehicle_number, booking_date, booking_time, duration, end_time, cost_per_hour, total_cost, bkash_number, bkash_pin) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+$stmt->bind_param("iisssisddss", $user_id, $slot_id, $vehicle_number, $booking_date, $booking_time, $duration, $end_time, $cost_per_hour, $total_cost, $bkash_number, $bkash_pin);
 
 if ($stmt->execute()) {
     echo "Booking successful! Total cost: $" . number_format($total_cost, 2);
