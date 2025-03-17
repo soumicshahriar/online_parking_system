@@ -89,3 +89,23 @@ INSERT INTO parking_slots (slot_number, location, vehicle_type, is_available) VA
 ('K2', 'Jamuna Future Park', 'car', TRUE),
 ...
 ('K25', 'Jamuna Future Park', 'car', TRUE);
+
+-- update this ---
+ALTER TABLE parking_slots ADD COLUMN cost_per_hour DECIMAL(10, 2) NOT NULL;
+
+-- Add bike slots for Bashundhara Shopping Mall
+UPDATE parking_slots SET cost_per_hour = 20 WHERE location = 'Bashundhara Shopping Mall' AND vehicle_type = 'bike';
+
+-- Add car slots for Bashundhara Shopping Mall
+UPDATE parking_slots SET cost_per_hour = 50 WHERE location = 'Bashundhara Shopping Mall' AND vehicle_type = 'car';
+
+-- Add bike slots for Jamuna Future Park
+UPDATE parking_slots SET cost_per_hour = 25 WHERE location = 'Jamuna Future Park' AND vehicle_type = 'bike';
+
+-- Add car slots for Jamuna Future Park
+UPDATE parking_slots SET cost_per_hour = 60 WHERE location = 'Jamuna Future Park' AND vehicle_type = 'car';
+
+-- update---
+ALTER TABLE bookings 
+ADD COLUMN cost_per_hour DECIMAL(10,2) NOT NULL DEFAULT 0.00,
+ADD COLUMN total_cost DECIMAL(10,2) NOT NULL DEFAULT 0.00;

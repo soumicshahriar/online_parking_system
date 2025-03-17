@@ -35,7 +35,8 @@ $query = "SELECT * FROM parking_slots WHERE location = '$selected_area' AND vehi
     SELECT slot_id FROM bookings 
     WHERE booking_date = '$selected_date' 
     AND (
-        ('$selected_time' < end_time AND '$end_time' > booking_time) 
+        ('$selected_time' < end_time AND '$end_time' > booking_time) OR
+        ('$selected_time' > end_time AND '$end_time' < booking_time)
     )
 )";
 $result = $conn->query($query);
@@ -128,7 +129,8 @@ $conn->close();
                         <h3 class="text-xl font-bold mb-2">Slot <?php echo $slot['slot_number']; ?></h3>
                         <p class="text-gray-600 mb-4">Location: <?php echo $slot['location']; ?></p>
                         <p class="text-gray-600 mb-4">Type: <?php echo ucfirst($slot['vehicle_type']); ?></p>
-                        <button onclick="bookSlot(<?php echo $slot['id']; ?>)" class="w-full bg-blue-600 text-white py-2 px-4 rounded-lg hover:bg-blue-700">
+                        <p class="text-gray-600 mb-4">Cost: $<?php echo $slot['cost_per_hour']; ?> per hour</p>
+                        <button onclick="bookSlot(<?php echo $slot['id']; ?>, <?php echo $slot['cost_per_hour']; ?>)" class="w-full bg-blue-600 text-white py-2 px-4 rounded-lg hover:bg-blue-700">
                             Book Now
                         </button>
                     </div>
@@ -143,6 +145,7 @@ $conn->close();
             <h2 class="text-2xl font-bold mb-6">Book Parking Slot</h2>
             <form id="booking-form">
                 <input type="hidden" id="slot-id" name="slot_id">
+                <input type="hidden" id="cost-per-hour" name="cost_per_hour">
                 <div class="mb-4">
                     <label class="block text-gray-700">Vehicle Number</label>
                     <input type="text" name="vehicle_number" required
@@ -163,6 +166,11 @@ $conn->close();
                     <input type="number" id="popup-duration" name="duration" readonly
                         class="w-full px-4 py-2 border rounded-lg bg-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500">
                 </div>
+                <div class="mb-4">
+                    <label class="block text-gray-700">Total Cost</label>
+                    <input type="text" id="total-cost" readonly
+                        class="w-full px-4 py-2 border rounded-lg bg-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                </div>
                 <button type="submit"
                     class="w-full bg-blue-600 text-white py-2 px-4 rounded-lg hover:bg-blue-700">
                     Confirm Booking
@@ -176,15 +184,20 @@ $conn->close();
 
     <script>
         // Open booking modal and populate fields
-        function bookSlot(slotId) {
+        function bookSlot(slotId, costPerHour) {
             const selectedDate = document.getElementById('date-select').value;
             const selectedTime = document.getElementById('time-select').value;
             const selectedDuration = document.getElementById('duration-select').value;
 
             document.getElementById('slot-id').value = slotId;
+            document.getElementById('cost-per-hour').value = costPerHour;
             document.getElementById('popup-date').value = selectedDate;
             document.getElementById('popup-time').value = selectedTime;
             document.getElementById('popup-duration').value = selectedDuration;
+
+            // Calculate total cost
+            const totalCost = costPerHour * selectedDuration;
+            document.getElementById('total-cost').value = `$${totalCost.toFixed(2)}`;
 
             document.getElementById('booking-modal').classList.remove('hidden');
         }

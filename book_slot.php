@@ -26,33 +26,22 @@ $vehicle_number = $_POST['vehicle_number'];
 $booking_date = $_POST['booking_date'];
 $booking_time = $_POST['booking_time'];
 $duration = $_POST['duration'];
+$cost_per_hour = $_POST['cost_per_hour'];
 
-// Calculate end time
+// Calculate end time and total cost
 $end_time = date('H:i', strtotime("+$duration hours", strtotime($booking_time)));
+$total_cost = $cost_per_hour * $duration;
 
-// Check for overlapping bookings
-$query = "SELECT id FROM bookings WHERE slot_id = $slot_id AND booking_date = '$booking_date' AND (
-    (booking_time <= '$booking_time' AND end_time > '$booking_time') OR
-    (booking_time < '$end_time' AND end_time >= '$end_time') OR
-    (booking_time >= '$booking_time' AND end_time <= '$end_time')
-)";
-$result = $conn->query($query);
+// Insert booking into database
+$stmt = $conn->prepare("INSERT INTO bookings (user_id, slot_id, vehicle_number, booking_date, booking_time, duration, end_time, cost_per_hour, total_cost) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)");
+$stmt->bind_param("iisssisdd", $user_id, $slot_id, $vehicle_number, $booking_date, $booking_time, $duration, $end_time, $cost_per_hour, $total_cost);
 
-if ($result->num_rows > 0) {
-    echo "This slot is already booked for the selected date and time.";
+if ($stmt->execute()) {
+    echo "Booking successful! Total cost: $" . number_format($total_cost, 2);
 } else {
-    // Insert booking into database
-    $stmt = $conn->prepare("INSERT INTO bookings (user_id, slot_id, vehicle_number, booking_date, booking_time, duration, end_time) VALUES (?, ?, ?, ?, ?, ?, ?)");
-    $stmt->bind_param("iisssis", $user_id, $slot_id, $vehicle_number, $booking_date, $booking_time, $duration, $end_time);
-
-    if ($stmt->execute()) {
-        echo "Booking successful!";
-    } else {
-        echo "Error: " . $stmt->error;
-    }
-
-    $stmt->close();
+    echo "Error: " . $stmt->error;
 }
 
+$stmt->close();
 $conn->close();
 ?>
