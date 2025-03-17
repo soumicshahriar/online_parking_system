@@ -1,0 +1,57 @@
+
+create database online_parking;
+
+use online_parking;
+
+CREATE TABLE users (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    username VARCHAR(50) NOT NULL,
+    email VARCHAR(100) NOT NULL,
+    password VARCHAR(255) NOT NULL
+); 
+
+-- CREATE TABLE bookings (
+--     id INT AUTO_INCREMENT PRIMARY KEY,
+--     user_id INT NOT NULL,
+--     vehicle_number VARCHAR(20) NOT NULL,
+--     parking_location VARCHAR(100) NOT NULL,
+--     booking_date DATE NOT NULL,
+--     booking_time TIME NOT NULL,
+--     duration INT NOT NULL,
+--     FOREIGN KEY (user_id) REFERENCES users(id)
+-- );
+
+
+
+CREATE TABLE bookings (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    user_id INT NOT NULL,
+    slot_id INT NOT NULL,
+    vehicle_number VARCHAR(20) NOT NULL,
+    booking_date DATE NOT NULL,
+    booking_time TIME NOT NULL,
+    duration INT NOT NULL,
+    FOREIGN KEY (user_id) REFERENCES users(id),
+    FOREIGN KEY (slot_id) REFERENCES parking_slots(id)
+);
+
+CREATE TABLE parking_slots (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    slot_number VARCHAR(10) NOT NULL UNIQUE,
+    location VARCHAR(100) NOT NULL,
+    is_available BOOLEAN DEFAULT TRUE
+);
+
+-- Add slots for Bashundhara Shopping Mall
+INSERT INTO parking_slots (slot_number, location, is_available) VALUES
+('B1', 'Bashundhara Shopping Mall', TRUE),
+('B2', 'Bashundhara Shopping Mall', TRUE),
+...
+('B50', 'Bashundhara Shopping Mall', TRUE);
+
+-- Add slots for Jamuna Future Park
+INSERT INTO parking_slots (slot_number, location, is_available) VALUES
+('J1', 'Jamuna Future Park', TRUE),
+('J2', 'Jamuna Future Park', TRUE),
+...
+('J50', 'Jamuna Future Park', TRUE);
