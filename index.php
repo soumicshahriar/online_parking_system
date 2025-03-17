@@ -31,14 +31,16 @@ $end_time = date('H:i', strtotime("+$selected_duration hours", strtotime($select
 
 // Fetch available slots
 $slots = [];
-$query = "SELECT * FROM parking_slots WHERE location = '$selected_area' AND vehicle_type = '$selected_vehicle_type' AND id NOT IN (
-    SELECT slot_id FROM bookings 
-    WHERE booking_date = '$selected_date' 
-    AND (
-        ('$selected_time' < end_time AND '$end_time' > booking_time) or
-        ('$selected_time' > end_time AND '$end_time' < booking_time)
-    )
-)";
+$query = "SELECT * FROM parking_slots 
+          WHERE location = '$selected_area' 
+          AND vehicle_type = '$selected_vehicle_type' 
+          AND id NOT IN (
+              SELECT slot_id FROM bookings 
+              WHERE booking_date = '$selected_date' 
+              AND (
+                  ('$selected_time' < end_time AND '$end_time' > booking_time)
+              )
+          )";
 $result = $conn->query($query);
 
 if (!$result) {
@@ -104,22 +106,60 @@ $conn->close();
                     </svg>
                 </div>
                 <ul tabindex="0" class="menu menu-sm dropdown-content bg-base-100 rounded-box z-1 mt-3 w-52 p-2 shadow">
-                    <li><a href="index.php" class="bg-blue-600 text-white px-4 py-2 mb-2 rounded-lg hover:bg-blue-700">Home</a></li>
-                    <li><a href="book_slot.php" class="bg-green-600 text-white px-4 py-2 mb-2 rounded-lg hover:bg-green-700">Book Slot</a></li>
-                    <li><a href="history.php" class="bg-yellow-600 text-white px-4 py-2 mb-2 rounded-lg hover:bg-yellow-700">History</a></li>
-                    <li><a href="profile.php" class="bg-purple-600 text-white px-4 py-2 mb-2 rounded-lg hover:bg-purple-700">Profile</a></li>
+                    <li><a href="index.php"
+                            class="bg-blue-600 text-white px-4 py-2 mb-2 rounded-lg hover:bg-blue-700">Home</a></li>
+                    <li><a href="book_slot.php"
+                            class="bg-green-600 text-white px-4 py-2 mb-2 rounded-lg hover:bg-green-700">Book Slot</a>
+                    </li>
+                    <li><a href="history.php"
+                            class="bg-yellow-600 text-white px-4 py-2 mb-2 rounded-lg hover:bg-yellow-700">History</a>
+                    </li>
+                    <li><a href="profile.php"
+                            class="bg-purple-600 text-white px-4 py-2 mb-2 rounded-lg hover:bg-purple-700">Profile</a>
+                    </li>
                 </ul>
             </div>
             <a class="btn btn-ghost text-xl">ParkEase</a>
+            <div class="dropdown dropdown-end">
+                <div tabindex="0" class="btn btn-ghost btn-circle avatar">
+                    <div class="w-10 rounded-full relative group">
+                        <!-- Profile Image with Tooltip -->
+                        <img alt="Tailwind CSS Navbar component"
+                            src="https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.webp"
+                            title="<?php echo $_SESSION['email']; ?>" class="w-full h-full rounded-full" />
+                        <!-- Custom Tooltip -->
+                        <div
+                            class="absolute bottom-full mb-2 hidden group-hover:block bg-black text-white text-sm px-2 py-1 rounded">
+                            <?php echo $_SESSION['email']; ?>
+                        </div>
+                    </div>
+                </div>
+                <ul tabindex="0" class="dropdown-content menu p-2 shadow bg-base-100 rounded-box w-52">
+                    <li>
+                        <a class="justify-between">
+                            Profile
+                            <span class="badge">1</span>
+                        </a>
+                    </li>
+                    <li><a href="logout.php">Logout</a></li>
+                </ul>
+            </div>
         </div>
 
         <div class="navbar-end">
             <div class="navbar-center hidden lg:flex">
                 <ul class="menu menu-horizontal">
-                    <li><a href="index.php" class="bg-blue-600 text-white px-4 py-2 mr-2 rounded-lg hover:bg-blue-700">Home</a></li>
-                    <li><a href="book_slot.php" class="bg-green-600 text-white px-4 py-2 mr-2 rounded-lg hover:bg-green-700">Book Slot</a></li>
-                    <li><a href="history.php" class="bg-yellow-600 text-white px-4 py-2 mr-2 rounded-lg hover:bg-yellow-700">History</a></li>
-                    <li><a href="profile.php" class="bg-purple-600 text-white px-4 py-2 mr-2 rounded-lg hover:bg-purple-700">Profile</a></li>
+                    <li><a href="index.php"
+                            class="bg-blue-600 text-white px-4 py-2 mr-2 rounded-lg hover:bg-blue-700">Home</a></li>
+                    <li><a href="#slot-list"
+                            class="bg-green-600 text-white px-4 py-2 mr-2 rounded-lg hover:bg-green-700">Book Slot</a>
+                    </li>
+                    <li><a href="history.php"
+                            class="bg-yellow-600 text-white px-4 py-2 mr-2 rounded-lg hover:bg-yellow-700">History</a>
+                    </li>
+                    <li><a href="profile.php"
+                            class="bg-purple-600 text-white px-4 py-2 mr-2 rounded-lg hover:bg-purple-700">Profile</a>
+                    </li>
                 </ul>
             </div>
             <a href="logout.php" class="bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-red-700">Logout</a>
@@ -271,7 +311,7 @@ $conn->close();
         }
 
         // Handle booking form submission
-        $('#booking-form').submit(function(e) {
+        $('#booking-form').submit(function (e) {
             e.preventDefault();
             const formData = $(this).serialize();
 
@@ -291,19 +331,19 @@ $conn->close();
                 url: 'book_slot.php',
                 type: 'POST',
                 data: formData,
-                success: function(response) {
+                success: function (response) {
                     alert(response);
                     closeModal();
                     location.reload(); // Refresh the page to update slot availability
                 },
-                error: function() {
+                error: function () {
                     alert('An error occurred. Please try again.');
                 }
             });
         });
 
         // Reload slots when area, vehicle type, date, time, or duration is changed
-        $('#area-select, #vehicle-type-select, #date-select, #time-select, #duration-select').change(function() {
+        $('#area-select, #vehicle-type-select, #date-select, #time-select, #duration-select').change(function () {
             const selectedArea = $('#area-select').val();
             const selectedVehicleType = $('#vehicle-type-select').val();
             const selectedDate = $('#date-select').val();
