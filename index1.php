@@ -31,7 +31,7 @@ $end_time = date('H:i', strtotime("+$selected_duration hours", strtotime($select
 
 // Fetch available slots
 $slots = [];
-$query = "SELECT * FROM parking_slots  
+$query = "SELECT * FROM parking_slots 
           WHERE location = '$selected_area' 
           AND vehicle_type = '$selected_vehicle_type' 
           AND id NOT IN (
@@ -94,7 +94,10 @@ $conn->close();
                     <li><a href="index.php"
                             class="bg-blue-600 text-white px-4 py-2 mb-2 rounded-lg hover:bg-blue-700">Home</a></li>
                     <li><a href="booking_slot.php"
-                            class="bg-green-600 text-white px-4 py-2 mb-2 rounded-lg hover:bg-green-700">Booking History</a>
+                            class="bg-green-600 text-white px-4 py-2 mb-2 rounded-lg hover:bg-green-700">Book Slot</a>
+                    </li>
+                    <li><a href="history.php"
+                            class="bg-yellow-600 text-white px-4 py-2 mb-2 rounded-lg hover:bg-yellow-700">History</a>
                     </li>
                     <li><a href="profile.php"
                             class="bg-purple-600 text-white px-4 py-2 mb-2 rounded-lg hover:bg-purple-700">Profile</a>
@@ -134,7 +137,10 @@ $conn->close();
                     <li><a href="index.php"
                             class="bg-blue-600 text-white px-4 py-2 mr-2 rounded-lg hover:bg-blue-700">Home</a></li>
                     <li><a href="booking_slot.php"
-                            class="bg-green-600 text-white px-4 py-2 mr-2 rounded-lg hover:bg-green-700">Booking History</a>
+                            class="bg-green-600 text-white px-4 py-2 mr-2 rounded-lg hover:bg-green-700">Book Slot</a>
+                    </li>
+                    <li><a href="history.php"
+                            class="bg-yellow-600 text-white px-4 py-2 mr-2 rounded-lg hover:bg-yellow-700">History</a>
                     </li>
                     <li><a href="profile.php"
                             class="bg-purple-600 text-white px-4 py-2 mr-2 rounded-lg hover:bg-purple-700">Profile</a>

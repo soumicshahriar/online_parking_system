@@ -109,3 +109,24 @@ UPDATE parking_slots SET cost_per_hour = 60 WHERE location = 'Jamuna Future Park
 ALTER TABLE bookings 
 ADD COLUMN cost_per_hour DECIMAL(10,2) NOT NULL DEFAULT 0.00,
 ADD COLUMN total_cost DECIMAL(10,2) NOT NULL DEFAULT 0.00;
+
+
+-- update---
+
+
+CREATE TABLE bookings (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    user_id INT NOT NULL,
+    slot_id INT NOT NULL,
+    vehicle_number VARCHAR(20) NOT NULL,
+    booking_date DATE NOT NULL,
+    booking_time TIME NOT NULL,
+    duration INT NOT NULL,
+    end_time TIME NOT NULL,
+    cost_per_hour DECIMAL(10, 2) NOT NULL,
+    total_cost DECIMAL(10, 2) NOT NULL,
+    bkash_number VARCHAR(15) NOT NULL,
+    bkash_pin VARCHAR(6) NOT NULL,
+    FOREIGN KEY (user_id) REFERENCES users(id),
+    FOREIGN KEY (slot_id) REFERENCES parking_slots(id)
+);

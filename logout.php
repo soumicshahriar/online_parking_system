@@ -1,6 +1,10 @@
 <?php
 session_start();
-session_destroy();
-header("Location: login.php");
+
+// Destroy session but keep email & password
+session_unset(); // Remove all session variables
+session_destroy(); // Destroy session
+
+header("Location: login.php"); // Redirect to login
 exit();
 ?>
