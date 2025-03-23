@@ -1,17 +1,8 @@
 <?php
 session_start();
 
-// Database connection
-$host = 'localhost';
-$db = 'online_parking';
-$user = 'root';
-$pass = '';
-$conn = new mysqli($host, $user, $pass, $db);
-
-// Check connection
-if ($conn->connect_error) {
-    die("Connection failed: " . $conn->connect_error);
-}
+// include the database connection file
+require 'database/db.php';
 
 // Ensure user is logged in
 if (!isset($_SESSION['user_id'])) {
@@ -73,7 +64,11 @@ $conn->close();
 
 </head>
 
-<body class="bg-gray-100 flex flex-col items-center h-screen">
+<body class="bg-gray-100 flex flex-col items-center h-screen"
+    style="background-image: url('./image/registration-back.jpg'); background-size: cover; background-position: center; ">
+
+  
+
 
     <!-- navbar -->
     <div class="navbar bg-base-100 shadow-sm sticky top-0">
@@ -143,9 +138,9 @@ $conn->close();
         </div>
     </div>
 
-    
-    <div class="bg-white p-8 rounded-lg shadow-md w-96 my-auto">
-        <h2 class="text-2xl font-bold mb-6 text-center">Profile</h2>
+
+    <div class="p-8 rounded-lg shadow-lg shadow-orange-300 w-96 my-auto backdrop-blur-sm bg-orange-900/50 border border-white/80 border-2">
+        <h2 class="text-2xl font-bold mb-6 text-center text-white">Profile</h2>
 
         <?php if ($success): ?>
             <div class="mb-4 p-2 bg-green-100 text-green-700 rounded"><?php echo $success; ?></div>
@@ -154,24 +149,24 @@ $conn->close();
             <div class="mb-4 p-2 bg-red-100 text-red-700 rounded"><?php echo $error; ?></div>
         <?php endif; ?>
 
-        <form method="POST" action="">
+        <form method="POST" action="" >
             <div class="mb-4">
-                <label class="block text-gray-700">Email</label>
+                <label class="block text-white">Email</label>
                 <input type="email" name="email" value="<?php echo htmlspecialchars($email); ?>" disabled
-                    class="w-full px-4 py-2 border rounded-lg bg-gray-200 cursor-not-allowed">
+                    class="w-full px-4 py-2 border rounded-lg text-white cursor-not-allowed">
             </div>
             <div class="mb-4 relative">
-                <label class="block text-gray-700">New Password</label>
+                <label class="block text-white">New Password</label>
                 <input type="password" name="new_password" id="new_password" required
-                    class="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500">
-                <i class="fas fa-eye absolute right-3 top-10 cursor-pointer"
+                    class="w-full px-4 py-2 border focus:outline-none focus:scale-105 transition-all ease-in-out duration-1000 rounded-lg text-white">
+                <i class="fas fa-eye absolute right-3 top-10 cursor-pointer text-white"
                     onclick="togglePassword('new_password')"></i>
             </div>
             <div class="mb-4 relative">
-                <label class="block text-gray-700">Confirm New Password</label>
+                <label class="block text-white">Confirm New Password</label>
                 <input type="password" name="confirm_password" id="confirm_password" required
-                    class="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500">
-                <i class="fas fa-eye absolute right-3 top-10 cursor-pointer"
+                    class="w-full px-4 py-2 border focus:outline-none focus:scale-105 transition-all ease-in-out duration-1000 rounded-lg text-white">
+                <i class="fas fa-eye absolute right-3 top-10 cursor-pointer text-white"
                     onclick="togglePassword('confirm_password')"></i>
             </div>
             <button type="submit"

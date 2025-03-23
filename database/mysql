@@ -130,3 +130,15 @@ CREATE TABLE bookings (
     FOREIGN KEY (user_id) REFERENCES users(id),
     FOREIGN KEY (slot_id) REFERENCES parking_slots(id)
 );
+
+
+-- update---
+ALTER TABLE bookings
+ADD COLUMN status VARCHAR(20) DEFAULT 'Pending';
+
+UPDATE bookings
+SET status = CASE
+    WHEN NOW() < CONCAT(booking_date, ' ', booking_time) THEN 'Pending'
+    WHEN NOW() BETWEEN CONCAT(booking_date, ' ', booking_time) AND CONCAT(booking_date, ' ', end_time) THEN 'Active'
+    ELSE 'Completed'
+END;

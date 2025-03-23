@@ -9,17 +9,8 @@ if (!isset($_SESSION['user_id'])) {
     exit();
 }
 
-// Database connection
-$servername = "localhost";
-$username = "root";
-$password = "";
-$dbname = "online_parking";
-
-$conn = new mysqli($servername, $username, $password, $dbname);
-
-if ($conn->connect_error) {
-    die("Connection failed: " . $conn->connect_error);
-}
+// include the database connection file
+require 'database/db.php';
 
 // Get the raw POST data
 $data = json_decode(file_get_contents('php://input'), true);

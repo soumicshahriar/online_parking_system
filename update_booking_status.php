@@ -1,15 +1,6 @@
 <?php
-// Database connection
-$host = 'localhost';
-$db = 'online_parking';
-$user = 'root';
-$pass = '';
-$conn = new mysqli($host, $user, $pass, $db);
-
-// Check connection
-if ($conn->connect_error) {
-    die("Connection failed: " . $conn->connect_error);
-}
+// include the database connection file
+require 'database/db.php';
 
 // Get current date and time
 $current_time = date('H:i');

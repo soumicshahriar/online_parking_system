@@ -3,17 +3,8 @@ session_start();
 
 
 
-// Database connection
-$host = 'localhost';
-$db = 'online_parking';
-$user = 'root';
-$pass = '';
-$conn = new mysqli($host, $user, $pass, $db);
-
-// Check connection
-if ($conn->connect_error) {
-    die("Connection failed: " . $conn->connect_error);
-}
+// include the database connection file
+require 'database/db.php';
 
 $error = "";
 
@@ -68,36 +59,36 @@ $conn->close();
 
 </head>
 
-<body class="bg-gray-100 flex items-center justify-center h-screen">
-    <div class="bg-white p-8 rounded-lg shadow-md w-96">
-        <h2 class="text-2xl font-bold mb-6 text-center">Register</h2>
+<body class="bg-gray-100 flex items-center justify-center h-screen" style="background-image: url('/image/registration-back.jpg'); background-size: cover; background-position: center;">
+    <div class="backdrop-blur-sm bg-orange-900/50 p-8 rounded-lg shadow-lg shadow-orange-300 w-96 border border-white/80 border-2">
+        <h2 class="text-2xl font-bold mb-6 text-center text-white">Register</h2>
         <?php if ($error): ?>
-            <div class="mb-4 p-2 bg-red-100 text-red-700 rounded">
+            <div class="mb-4 p-2 bg-red-100/70 text-red-700 rounded backdrop-blur-sm">
                 <?php echo $error; ?>
             </div>
         <?php endif; ?>
         <form method="POST" action="" onsubmit="return validateForm()">
             <div class="mb-4">
-                <label class="block text-gray-700">Username</label>
+                <label class="block text-white">Username</label>
                 <input type="text" name="username" id="username" required
-                    class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    class="w-full px-4 py-2 border rounded-lg focus:outline-none bg-black/20 text-white focus:scale-105 transition-all ease-in-out duration-1000"
                     autocomplete="username">
             </div>
             <div class="mb-4">
-                <label class="block text-gray-700">Email</label>
-                <input type="email" name="email" id="email" required
-                    class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                <label class="block text-white">Email</label>
+                <input type="email" name="email" id="email" required 
+                    class="w-full px-4 py-2 border rounded-lg focus:outline-none bg-black/20 text-white focus:scale-105 transition-all ease-in-out duration-1000"
                     autocomplete="email">
                 <span id="email-error" class="text-red-500 text-sm hidden">Please enter a valid email address (e.g.,
                     example@example.com).</span>
             </div>
             <div class="mb-4 relative">
-                <label class="block text-gray-700">Password</label>
+                <label class="block text-white">Password</label>
                 <input type="password" name="password" id="password" required
-                    class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    class="w-full px-4 py-2 border rounded-lg focus:outline-none bg-black/20 text-white focus:scale-105 transition-all ease-in-out duration-1000"
                     autocomplete="new-password">
                 <!-- Eye icon to toggle password visibility -->
-                <i class="fas fa-eye absolute right-3 top-10 cursor-pointer" onclick="togglePassword('password')"></i>
+                <i class="fas fa-eye absolute right-3 top-10 cursor-pointer text-white" onclick="togglePassword('password')"></i>
             </div>
             <button type="submit"
                 class="w-full bg-blue-600 text-white py-2 px-4 rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500">
@@ -105,7 +96,7 @@ $conn->close();
             </button>
         </form>
 
-        <p class="mt-4 text-center">Already have an account? <a href="login.php" class="text-blue-600">Login</a></p>
+        <p class="mt-4 text-center text-white">Already have an account? <a href="login.php" class="text-blue-300 hover:text-blue-500">Login</a></p>
     </div>
     <script>
         // Function to validate email format

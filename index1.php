@@ -1,23 +1,15 @@
 <?php
 session_start();
 
+// include the database connection file
+require 'database/db.php';
+
 // Redirect to login if not logged in
 if (!isset($_SESSION['user_id'])) {
     header("Location: login.php");
     exit();
 }
 
-// Database connection
-$host = 'localhost';
-$db = 'online_parking';
-$user = 'root';
-$pass = '';
-$conn = new mysqli($host, $user, $pass, $db);
-
-// Check connection
-if ($conn->connect_error) {
-    die("Connection failed: " . $conn->connect_error);
-}
 
 // Fetch available parking slots for the selected area, date, time, duration, and vehicle type
 $selected_area = isset($_GET['area']) ? $_GET['area'] : 'Bashundhara Shopping Mall';
@@ -31,7 +23,7 @@ $end_time = date('H:i', strtotime("+$selected_duration hours", strtotime($select
 
 // Fetch available slots
 $slots = [];
-$query = "SELECT * FROM parking_slots 
+$query = "SELECT * FROM parking_slots  
           WHERE location = '$selected_area' 
           AND vehicle_type = '$selected_vehicle_type' 
           AND id NOT IN (
@@ -94,10 +86,8 @@ $conn->close();
                     <li><a href="index.php"
                             class="bg-blue-600 text-white px-4 py-2 mb-2 rounded-lg hover:bg-blue-700">Home</a></li>
                     <li><a href="booking_slot.php"
-                            class="bg-green-600 text-white px-4 py-2 mb-2 rounded-lg hover:bg-green-700">Book Slot</a>
-                    </li>
-                    <li><a href="history.php"
-                            class="bg-yellow-600 text-white px-4 py-2 mb-2 rounded-lg hover:bg-yellow-700">History</a>
+                            class="bg-green-600 text-white px-4 py-2 mb-2 rounded-lg hover:bg-green-700">Booking
+                            History</a>
                     </li>
                     <li><a href="profile.php"
                             class="bg-purple-600 text-white px-4 py-2 mb-2 rounded-lg hover:bg-purple-700">Profile</a>
@@ -137,10 +127,8 @@ $conn->close();
                     <li><a href="index.php"
                             class="bg-blue-600 text-white px-4 py-2 mr-2 rounded-lg hover:bg-blue-700">Home</a></li>
                     <li><a href="booking_slot.php"
-                            class="bg-green-600 text-white px-4 py-2 mr-2 rounded-lg hover:bg-green-700">Book Slot</a>
-                    </li>
-                    <li><a href="history.php"
-                            class="bg-yellow-600 text-white px-4 py-2 mr-2 rounded-lg hover:bg-yellow-700">History</a>
+                            class="bg-green-600 text-white px-4 py-2 mr-2 rounded-lg hover:bg-green-700">Booking
+                            History</a>
                     </li>
                     <li><a href="profile.php"
                             class="bg-purple-600 text-white px-4 py-2 mr-2 rounded-lg hover:bg-purple-700">Profile</a>

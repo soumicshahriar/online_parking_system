@@ -7,17 +7,8 @@ if (!isset($_SESSION['user_id']) || $_SESSION['role'] !== 'admin') {
     exit();
 }
 
-// Database connection
-$host = 'localhost';
-$db   = 'online_parking';
-$user = 'root';
-$pass = '';
-$conn = new mysqli($host, $user, $pass, $db);
-
-// Check connection
-if ($conn->connect_error) {
-    die("Connection failed: " . $conn->connect_error);
-}
+// include the database connection file
+require 'database/db.php';
 
 // Fetch all bookings
 $bookings = [];

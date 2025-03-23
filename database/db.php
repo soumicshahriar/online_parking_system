@@ -1,4 +1,4 @@
-<!-- Database connection -->
+
 <?php
 $host = 'localhost';
 $db   = 'online_parking';

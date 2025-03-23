@@ -1,23 +1,15 @@
 <?php
 session_start();
 
+// include the database connection file
+require 'database/db.php';
+
 // Redirect to login if not logged in
 if (!isset($_SESSION['user_id'])) {
     header("Location: login.php");
     exit();
 }
 
-// Database connection
-$host = 'localhost';
-$db = 'online_parking';
-$user = 'root';
-$pass = '';
-$conn = new mysqli($host, $user, $pass, $db);
-
-// Check connection
-if ($conn->connect_error) {
-    die("Connection failed: " . $conn->connect_error);
-}
 
 // Fetch available parking slots for the selected area, date, time, duration, and vehicle type
 $selected_area = isset($_GET['area']) ? $_GET['area'] : 'Bashundhara Shopping Mall';
@@ -80,7 +72,7 @@ $conn->close();
 
 <body class="bg-gray-100 relative">
     <!-- nav section -->
-    <div class="navbar bg-base-100 shadow-sm sticky top-0">
+    <div class="navbar bg-base-100 shadow-sm sticky top-0 z-50" >
         <div class="navbar-start">
             <div class="dropdown">
                 <div tabindex="0" role="button" class="btn btn-ghost lg:hidden">
@@ -153,51 +145,51 @@ $conn->close();
         <h2 class="text-3xl font-bold mb-6">Available Parking Slots</h2>
 
         <!-- Area Selection Dropdown -->
-        <div class="mb-6">
+        <div class="mb-6 backdrop-blur-sm bg-gray-200/50 p-8 rounded-lg shadow-lg shadow-gray-300 ">
             <label class="block text-gray-700">Select Area</label>
             <select id="area-select"
-                class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 border-black focus:border-none">
                 <option value="Bashundhara Shopping Mall">Bashundhara Shopping Mall</option>
                 <option value="Jamuna Future Park">Jamuna Future Park</option>
             </select>
         </div>
 
         <!-- Vehicle Type Dropdown -->
-        <div class="mb-6">
+        <div class="mb-6 backdrop-blur-sm bg-gray-200/50 p-8 rounded-lg shadow-lg shadow-gray-300 ">
             <label class="block text-gray-700">Select Vehicle Type</label>
             <select id="vehicle-type-select"
-                class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 border-black focus:border-none">
                 <option value="car">Car</option>
                 <option value="bike">Bike</option>
             </select>
         </div>
 
         <!-- Date and Time Selection -->
-        <div class="mb-6 grid grid-cols-1 md:grid-cols-3 gap-4">
+        <div class="mb-6 grid grid-cols-1 md:grid-cols-3 gap-4 backdrop-blur-sm bg-gray-200/50 p-8 rounded-lg shadow-lg shadow-gray-300 ">
             <div>
                 <label class="block text-gray-700">Booking Date</label>
                 <input type="date" id="date-select" value="<?php echo $selected_date; ?>"
-                    class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 border-black focus:border-none">
             </div>
             <div>
                 <label class="block text-gray-700">Booking Time</label>
                 <input type="time" id="time-select" value="<?php echo $selected_time; ?>"
-                    class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 border-black focus:border-none">
             </div>
             <div>
                 <label class="block text-gray-700">Duration (hours)</label>
                 <input type="number" id="duration-select" value="<?php echo $selected_duration; ?>"
-                    class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 border-black focus:border-none">
             </div>
         </div>
 
         <!-- Slot List -->
-        <div id="slot-list" class="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div id="slot-list" class="grid grid-cols-1 md:grid-cols-3 gap-6 backdrop-blur-sm bg-white p-8 rounded-lg">
             <?php if (empty($slots)): ?>
                 <p class="text-gray-600">No parking slots available at the moment.</p>
             <?php else: ?>
                 <?php foreach ($slots as $slot): ?>
-                    <div class="bg-white p-6 rounded-lg shadow-md">
+                    <div class=" p-6 rounded-lg text-center shadow-2xl backdrop-blur-md bg-white hover:scale-105 transition-all ease-in-out duration-1000 ">
                         <h3 class="text-xl font-bold mb-2">Slot <?php echo $slot['slot_number']; ?></h3>
                         <p class="text-gray-600 mb-4">Location: <?php echo $slot['location']; ?></p>
                         <p class="text-gray-600 mb-4">Type: <?php echo ucfirst($slot['vehicle_type']); ?></p>

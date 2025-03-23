@@ -7,17 +7,8 @@ if (!isset($_SESSION['user_id'])) {
     exit();
 }
 
-// Database connection
-$host = 'localhost';
-$db   = 'online_parking';
-$user = 'root';
-$pass = '';
-$conn = new mysqli($host, $user, $pass, $db);
-
-// Check connection
-if ($conn->connect_error) {
-    die("Connection failed: " . $conn->connect_error);
-}
+// include the database connection file
+require 'database/db.php';
 
 // Validate and sanitize form data
 $required_fields = ['slot_id', 'vehicle_number', 'booking_date', 'booking_time', 'duration', 'cost_per_hour', 'bkash_number', 'bkash_pin'];
