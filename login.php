@@ -8,29 +8,35 @@ $error = "";
 $email = isset($_GET['email']) ? $_GET['email'] : ""; // Get email from URL parameter
 $password = isset($_GET['password']) ? $_GET['password'] : "";
 
-
-
-
 // Handle login form submission
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $email = $_POST['email']; // Set email when the form is submitted
     $password = $_POST['password'];
 
     // Fetch user from database
-    $stmt = $conn->prepare("SELECT id, username, email, password FROM users WHERE email = ?");
+    $stmt = $conn->prepare("SELECT id, username, email, password, role FROM users WHERE email = ?");
     $stmt->bind_param("s", $email);
     $stmt->execute();
     $stmt->store_result();
 
     if ($stmt->num_rows > 0) {
-        $stmt->bind_result($id, $username, $db_email, $hashed_password);
+        $stmt->bind_result($id, $username, $db_email, $hashed_password, $role);
         $stmt->fetch();
 
         if (password_verify($password, $hashed_password)) {
             $_SESSION['user_id'] = $id;
             $_SESSION['username'] = $username;
             $_SESSION['email'] = $db_email;
+            $_SESSION['role'] = $role;
 
+            // Clear output buffer to ensure clean redirect
+            if (ob_get_length()) ob_clean();
+
+            // Check for admin role (case-insensitive)
+            if (strtolower($role) === 'admin') {
+                header("Location: admin_dashboard.php");
+                exit();
+            }
             header("Location: index.php"); // Redirect to home page
             exit();
         } else {
@@ -69,12 +75,8 @@ $conn->close();
             -webkit-box-shadow: 0 0 0 1000px transparent inset !important;
             -webkit-text-fill-color: white !important;
             -webkit-background-clip: text !important;
-            /* -webkit-background-color: transparent !important; */
-            /* transition: all ease-in-out duration-1000; */
         }
     </style>
-
-
 </head>
 
 <body class="bg-gray-100 flex items-center justify-center h-screen"
