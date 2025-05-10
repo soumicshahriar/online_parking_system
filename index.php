@@ -27,7 +27,7 @@ $query = "SELECT * FROM parking_slots
           WHERE location = '$selected_area' 
           AND vehicle_type = '$selected_vehicle_type' 
           AND id NOT IN (
-              SELECT slot_id FROM bookings 
+              SELECT slot_id FROM a_bookings 
               WHERE booking_date = '$selected_date' 
               AND (
                   ('$selected_time' < end_time AND '$end_time' > booking_time)

@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: May 10, 2025 at 07:32 PM
+-- Generation Time: Mar 23, 2025 at 02:20 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -24,10 +24,10 @@ SET time_zone = "+00:00";
 -- --------------------------------------------------------
 
 --
--- Table structure for table `a_bookings`
+-- Table structure for table `bookings`
 --
 
-CREATE TABLE `a_bookings` (
+CREATE TABLE `bookings` (
   `id` int(11) NOT NULL,
   `user_id` int(11) NOT NULL,
   `slot_id` int(11) NOT NULL,
@@ -38,20 +38,18 @@ CREATE TABLE `a_bookings` (
   `end_time` time NOT NULL,
   `cost_per_hour` decimal(10,2) NOT NULL,
   `total_cost` decimal(10,2) NOT NULL,
-  `bkash_number` varchar(20) NOT NULL,
-  `bkash_pin` varchar(20) NOT NULL,
-  `status` varchar(20) NOT NULL,
-  `created_at` timestamp NOT NULL DEFAULT current_timestamp()
+  `bkash_number` varchar(15) NOT NULL,
+  `bkash_pin` varchar(6) NOT NULL,
+  `status` varchar(20) DEFAULT 'Pending'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
--- Dumping data for table `a_bookings`
+-- Dumping data for table `bookings`
 --
 
-INSERT INTO `a_bookings` (`id`, `user_id`, `slot_id`, `vehicle_number`, `booking_date`, `booking_time`, `duration`, `end_time`, `cost_per_hour`, `total_cost`, `bkash_number`, `bkash_pin`, `status`, `created_at`) VALUES
-(10, 24, 28, 'N23', '2025-05-07', '18:08:00', 3, '21:08:00', 50.00, 150.00, '01704442185', '11111', 'Pending', '2025-05-07 16:08:52'),
-(11, 25, 27, 'D10', '2025-05-07', '18:29:00', 1, '19:29:00', 50.00, 50.00, '01779552185', '11111', 'Pending', '2025-05-07 16:29:53'),
-(12, 25, 26, 'D10', '2025-05-07', '19:26:00', 5, '00:26:00', 50.00, 250.00, '111111111', 'soumic3', 'Pending', '2025-05-07 17:27:34');
+INSERT INTO `bookings` (`id`, `user_id`, `slot_id`, `vehicle_number`, `booking_date`, `booking_time`, `duration`, `end_time`, `cost_per_hour`, `total_cost`, `bkash_number`, `bkash_pin`, `status`) VALUES
+(11, 14, 26, 'D9', '2025-03-23', '19:55:00', 1, '20:55:00', 50.00, 50.00, '01704442185', '11111', 'Pending'),
+(12, 14, 107, 'D10', '2025-03-23', '14:17:00', 1, '15:17:00', 60.00, 60.00, '01721207767', '11111', 'Pending');
 
 -- --------------------------------------------------------
 
@@ -184,31 +182,36 @@ CREATE TABLE `users` (
   `id` int(11) NOT NULL,
   `username` varchar(50) NOT NULL,
   `email` varchar(100) NOT NULL,
-  `password` varchar(255) NOT NULL,
-  `role` varchar(100) NOT NULL
+  `password` varchar(255) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `users`
 --
 
-INSERT INTO `users` (`id`, `username`, `email`, `password`, `role`) VALUES
-(1, 'admin_shahriar', 'admin@gmail.com', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'admin'),
-(22, 'soumic', 'soumic@gmail.com', '$2y$10$lf7tzeqF9mkB.nnNTCo/8eNm02wd4VHxAAELwPTUmStMxndku05kG', 'Admin'),
-(24, 'soumic', 'shahriar@gmail.com', '$2y$10$gNQBdA7gXzwkwrt.FBJh5eFFxFVEwJa62Zmy3H7tbm6qoyWrT1sbi', 'User'),
-(25, 'shahriar', 'shahriar12@gmail.com', '$2y$10$CwwdMywjS6ZlnuwizDuq.eq.JuHv1X7YlTTSltbdM70F61/A/qXQS', 'User');
+INSERT INTO `users` (`id`, `username`, `email`, `password`) VALUES
+(1, 'soumic', 'soumicshariar1@gmail.com', '$2y$10$6VrGiDX6voZH4uCZJVmUL.3fWPJymMHfkn8tnDrTF40GdHbOEQXDC'),
+(3, 'shahriar', 'soumicshariar1@gmail.com', '$2y$10$60wV9/3O36AXw95E5C7sYOdEKJtAEfWftfNkvSBEj8OirIsugY9ei'),
+(4, 'soumic', 'soumicshariar3@gmail.com', '$2y$10$U0kloVhKr46amowhVxOqLOiMvodnrvaM2YvQUn8WnJa9qFlFm8Sb2'),
+(5, 'soumic', 'soumic2@gmail.com', '$2y$10$XEFLzUd92nuK1PGvVYVZneJW5ZQAkvYlhIM0LwZusvrfLu/hZrkN6'),
+(10, 'shahriar', 'soumic@gmail.com', '$2y$10$NIuCqbpWXZcVBr3L4xYY.uPYGeQ0FAH3l7d4qrfOX5xc269KbyTiy'),
+(11, 'munna', 'munna@gmail.com', '$2y$10$Vat4FgIYwei7iNiOUKDBa.6YajnKNwocug8JPt360PhO65ofBHYwG'),
+(12, 'munna', 'munna1@gmail.com', '$2y$10$B0caCcq0IXa9t.JBCmae6u/WRUB3oScQeUsu1G89/tE1Z0zwVkwn2'),
+(13, 'munna', 'munna2@gmail.com', '$2y$10$dnZdc6kiVsPZpqIDGhzHk.M31IZo5cKYHf5pYvSXBNgdqzPQcVxRK'),
+(14, 'munna', 'munna3@gmail.com', '$2y$10$JOTnf3ZmL1KCxPFq8U5q2.WriGsIlTNf5Jmq8oRFYvFGRKXB5lAHm'),
+(15, 'munna', 'munna4@gmail.com', '$2y$10$P6PKctmrbrkz6Z/e.mbVXuSHqYvf4rjRFtV2hSUwPry7jBmxZuzfO');
 
 --
 -- Indexes for dumped tables
 --
 
 --
--- Indexes for table `a_bookings`
+-- Indexes for table `bookings`
 --
-ALTER TABLE `a_bookings`
+ALTER TABLE `bookings`
   ADD PRIMARY KEY (`id`),
-  ADD KEY `slot_id` (`slot_id`),
-  ADD KEY `a_bookings_ibfk_1` (`user_id`);
+  ADD KEY `user_id` (`user_id`),
+  ADD KEY `slot_id` (`slot_id`);
 
 --
 -- Indexes for table `parking_slots`
@@ -228,9 +231,9 @@ ALTER TABLE `users`
 --
 
 --
--- AUTO_INCREMENT for table `a_bookings`
+-- AUTO_INCREMENT for table `bookings`
 --
-ALTER TABLE `a_bookings`
+ALTER TABLE `bookings`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
 
 --
@@ -243,18 +246,18 @@ ALTER TABLE `parking_slots`
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=26;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
 
 --
 -- Constraints for dumped tables
 --
 
 --
--- Constraints for table `a_bookings`
+-- Constraints for table `bookings`
 --
-ALTER TABLE `a_bookings`
-  ADD CONSTRAINT `a_bookings_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE,
-  ADD CONSTRAINT `a_bookings_ibfk_2` FOREIGN KEY (`slot_id`) REFERENCES `parking_slots` (`id`);
+ALTER TABLE `bookings`
+  ADD CONSTRAINT `bookings_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`),
+  ADD CONSTRAINT `bookings_ibfk_2` FOREIGN KEY (`slot_id`) REFERENCES `parking_slots` (`id`);
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

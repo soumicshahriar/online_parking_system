@@ -21,7 +21,7 @@ if (isset($_POST['delete_selected'])) {
     if (!empty($_POST['selected_bookings'])) {
         $selected_bookings = $_POST['selected_bookings'];
         $placeholders = implode(',', array_fill(0, count($selected_bookings), '?')); // Create placeholders for prepared statement
-        $delete_query = "DELETE FROM bookings WHERE id IN ($placeholders) AND user_id = ?";
+        $delete_query = "DELETE FROM a_bookings WHERE id IN ($placeholders) AND user_id = ?";
         $stmt = $conn->prepare($delete_query);
 
         // Bind parameters dynamically
@@ -44,7 +44,7 @@ if (isset($_POST['delete_selected'])) {
 // Handle delete operation
 if (isset($_GET['delete_id'])) {
     $delete_id = $_GET['delete_id'];
-    $delete_query = "DELETE FROM bookings WHERE id = ? AND user_id = ?";
+    $delete_query = "DELETE FROM a_bookings WHERE id = ? AND user_id = ?";
     $stmt = $conn->prepare($delete_query);
     $stmt->bind_param("ii", $delete_id, $_SESSION['user_id']);
     if ($stmt->execute()) {
@@ -77,7 +77,7 @@ if (isset($_GET['download_csv'])) {
                 ELSE 'Completed'
             END AS status
         FROM 
-            bookings
+            a_bookings
         WHERE 
             user_id = ?
     ";
@@ -128,7 +128,7 @@ $query = "
             ELSE 'Completed'
         END AS status
     FROM 
-        bookings
+        a_bookings
     WHERE 
         user_id = ?
 ";

@@ -1,39 +1,88 @@
-<!DOCTYPE html>
-<html lang="en">
+<?php
+// Get the current page name
+$current_page = basename($_SERVER['PHP_SELF']);
+?>
+<!-- Sidebar -->
+<div class="sidebar">
+    <h4 class="mb-4">Admin Panel</h4>
+    <ul class="sidebar-menu">
+        <li>
+            <a href="admin_dashboard.php" class="<?php echo $current_page === 'admin_dashboard.php' ? 'active' : ''; ?>">
+                <i class="fas fa-home"></i> Dashboard
+            </a>
+        </li>
+        <li>
+            <a href="parking_slots.php" class="<?php echo $current_page === 'parking_slots.php' ? 'active' : ''; ?>">
+                <i class="fas fa-car"></i> Parking Slots
+            </a>
+        </li>
+        <li>
+            <a href="users.php" class="<?php echo $current_page === 'users.php' ? 'active' : ''; ?>">
+                <i class="fas fa-users"></i> Users
+            </a>
+        </li>
+        <li>
+            <a href="bookings.php" class="<?php echo $current_page === 'bookings.php' ? 'active' : ''; ?>">
+                <i class="fas fa-calendar"></i> Bookings
+            </a>
+        </li>
+        <li>
+            <a href="logout.php">
+                <i class="fas fa-sign-out-alt"></i> Logout
+            </a>
+        </li>
+    </ul>
+</div>
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-</head>
+<style>
+.sidebar {
+    width: 250px;
+    height: 100vh;
+    position: fixed;
+    left: 0;
+    top: 0;
+    background: #2c3e50;
+    color: white;
+    padding: 20px;
+    z-index: 1000;
+}
 
-<body>
-    <div class="navbar bg-base-100 shadow-sm sticky top-0 z-50">
-        <div class="navbar-start">
-            <!-- Mobile menu button -->
-            <div class="dropdown lg:hidden">
-                <!-- Your mobile menu code -->
-            </div>
-            <!-- Logo -->
-            <a class="btn btn-ghost text-xl">ParkEase</a>
-        </div>
+.main-content {
+    margin-left: 250px;
+    padding: 20px;
+}
 
-        <!-- Desktop navigation -->
-        <div class="navbar-center hidden lg:flex">
-            <ul class="menu menu-horizontal px-1">
-                <li><a href="#" data-page="a_dashboard.php" class="nav-link">Dashboard</a></li>
-                <li><a href="#" data-page="a_user.php" class="nav-link">User</a></li>
-                <!-- <li><a href="#" data-page="booking_slot.php" class="nav-link">Booking History</a></li>
-                <li><a href="#" data-page="profile.php" class="nav-link">Profile</a></li> -->
-            </ul>
-        </div>
+.sidebar-menu {
+    list-style: none;
+    padding: 0;
+}
 
-        <!-- Right-side profile & logout -->
-        <div class="navbar-end">
-            <!-- Your profile dropdown -->
-            <a href="logout.php" class="btn btn-error ml-2">Logout</a>
-        </div>
-    </div>
-</body>
+.sidebar-menu li {
+    margin-bottom: 10px;
+}
 
-</html>
+.sidebar-menu a {
+    color: white;
+    text-decoration: none;
+    display: block;
+    padding: 10px;
+    border-radius: 5px;
+    transition: all 0.3s ease;
+}
+
+.sidebar-menu a:hover {
+    background: rgba(255,255,255,0.1);
+    transform: translateX(5px);
+}
+
+.sidebar-menu a.active {
+    background: rgba(255,255,255,0.2);
+    font-weight: bold;
+}
+
+.sidebar-menu i {
+    margin-right: 10px;
+    width: 20px;
+    text-align: center;
+}
+</style> 

@@ -48,7 +48,7 @@ $status = "Pending"; // You can change this to any default status you prefer
 
 
 // Insert booking into database
-$stmt = $conn->prepare("INSERT INTO bookings (user_id, slot_id, vehicle_number, booking_date, booking_time, duration, end_time, cost_per_hour, total_cost, bkash_number, bkash_pin, status) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+$stmt = $conn->prepare("INSERT INTO a_bookings (user_id, slot_id, vehicle_number, booking_date, booking_time, duration, end_time, cost_per_hour, total_cost, bkash_number, bkash_pin, status) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
 $stmt->bind_param("iisssisddsss", $user_id, $slot_id, $vehicle_number, $booking_date, $booking_time, $duration, $end_time, $cost_per_hour, $total_cost, $bkash_number, $bkash_pin, $status);
 if ($stmt->execute()) {
     echo "Booking successful! Total cost: $" . number_format($total_cost, 2);
@@ -56,15 +56,6 @@ if ($stmt->execute()) {
     echo "Error: " . $stmt->error;
 }
 
-$stmt2 = $conn->prepare("INSERT INTO a_bookings (user_id, slot_id, vehicle_number, booking_date, booking_time, duration, end_time, cost_per_hour, total_cost, bkash_number, bkash_pin, status) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
-$stmt2->bind_param("iisssisddsss", $user_id, $slot_id, $vehicle_number, $booking_date, $booking_time, $duration, $end_time, $cost_per_hour, $total_cost, $bkash_number, $bkash_pin, $status);
-if ($stmt2->execute()) {
-    echo "Booking successful! Total cost: $" . number_format($total_cost, 2);
-} else {
-    echo "Error: " . $stmt2->error;
-}
-
 $stmt->close();
-$stmt2->close();
 $conn->close();
 ?>
