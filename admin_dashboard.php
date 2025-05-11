@@ -38,6 +38,42 @@ $query = "SELECT b.*, u.username, p.slot_number, p.location
           ORDER BY b.booking_date DESC, b.booking_time DESC 
           LIMIT 5";
 $recent_bookings = $conn->query($query);
+
+// Get revenue data for the chart
+$period = isset($_GET['period']) ? $_GET['period'] : 'daily';
+$start_date = isset($_GET['start_date']) ? $_GET['start_date'] : date('Y-m-d', strtotime('-30 days'));
+$end_date = isset($_GET['end_date']) ? $_GET['end_date'] : date('Y-m-d');
+
+switch($period) {
+    case 'monthly':
+        $query = "SELECT DATE_FORMAT(booking_date, '%Y-%m') as period, 
+                 SUM(total_cost) as revenue 
+                 FROM a_bookings 
+                 WHERE booking_date BETWEEN ? AND ? 
+                 GROUP BY DATE_FORMAT(booking_date, '%Y-%m')
+                 ORDER BY period";
+        break;
+    case 'yearly':
+        $query = "SELECT DATE_FORMAT(booking_date, '%Y') as period, 
+                 SUM(total_cost) as revenue 
+                 FROM a_bookings 
+                 WHERE booking_date BETWEEN ? AND ? 
+                 GROUP BY DATE_FORMAT(booking_date, '%Y')
+                 ORDER BY period";
+        break;
+    default: // daily
+        $query = "SELECT booking_date as period, 
+                 SUM(total_cost) as revenue 
+                 FROM a_bookings 
+                 WHERE booking_date BETWEEN ? AND ? 
+                 GROUP BY booking_date
+                 ORDER BY booking_date";
+}
+
+$stmt = $conn->prepare($query);
+$stmt->bind_param("ss", $start_date, $end_date);
+$stmt->execute();
+$revenue_data = $stmt->get_result();
 ?>
 
 <!DOCTYPE html>
@@ -48,6 +84,7 @@ $recent_bookings = $conn->query($query);
     <title>Admin Dashboard - Parking Management System</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
     <?php include 'admin_navbar.php'; ?>
@@ -92,6 +129,7 @@ $recent_bookings = $conn->query($query);
                     </div>
                 </div>
             </div>
+          
 
             <!-- Quick Actions -->
             <div class="row mb-4">
@@ -155,9 +193,82 @@ $recent_bookings = $conn->query($query);
                     </div>
                 </div>
             </div>
+
+            <!-- Revenue Chart -->
+            <div class="row my-4">
+                <div class="col-12">
+                    <div class="card">
+                        <div class="card-header d-flex justify-content-between align-items-center">
+                            <h5 class="card-title mb-0">Revenue Analysis</h5>
+                            <form class="d-flex gap-2" method="GET">
+                                <select name="period" class="form-select" onchange="this.form.submit()">
+                                    <option value="daily" <?php echo $period === 'daily' ? 'selected' : ''; ?>>Daily</option>
+                                    <option value="monthly" <?php echo $period === 'monthly' ? 'selected' : ''; ?>>Monthly</option>
+                                    <option value="yearly" <?php echo $period === 'yearly' ? 'selected' : ''; ?>>Yearly</option>
+                                </select>
+                                <input type="date" name="start_date" class="form-control" value="<?php echo $start_date; ?>" onchange="this.form.submit()">
+                                <input type="date" name="end_date" class="form-control" value="<?php echo $end_date; ?>" onchange="this.form.submit()">
+                            </form>
+                        </div>
+                        <div class="card-body">
+                            <canvas id="revenueChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Prepare data for the chart
+        const revenueData = {
+            labels: [<?php 
+                $labels = [];
+                $data = [];
+                while($row = $revenue_data->fetch_assoc()) {
+                    $labels[] = "'" . $row['period'] . "'";
+                    $data[] = $row['revenue'];
+                }
+                echo implode(',', $labels);
+            ?>],
+            datasets: [{
+                label: 'Revenue (৳)',
+                data: [<?php echo implode(',', $data); ?>],
+                backgroundColor: 'rgba(54, 162, 235, 0.2)',
+                borderColor: 'rgba(54, 162, 235, 1)',
+                borderWidth: 1
+            }]
+        };
+
+        // Create the chart
+        const ctx = document.getElementById('revenueChart').getContext('2d');
+        new Chart(ctx, {
+            type: 'line',
+            data: revenueData,
+            options: {
+                responsive: true,
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        ticks: {
+                            callback: function(value) {
+                                return '৳' + value.toLocaleString();
+                            }
+                        }
+                    }
+                },
+                plugins: {
+                    tooltip: {
+                        callbacks: {
+                            label: function(context) {
+                                return '৳' + context.raw.toLocaleString();
+                            }
+                        }
+                    }
+                }
+            }
+        });
+    </script>
 </body>
 </html> 

@@ -106,7 +106,7 @@ while($user = $result->fetch_assoc()) {
                                     <th>ID</th>
                                     <th>Username</th>
                                     <th>Email</th>
-                                    <th>Actions</th>
+                                    <!-- <th>Actions</th> -->
                                 </tr>
                             </thead>
                             <tbody>
@@ -115,7 +115,7 @@ while($user = $result->fetch_assoc()) {
                                     <td><?php echo $user['id']; ?></td>
                                     <td><?php echo htmlspecialchars($user['username']); ?></td>
                                     <td><?php echo htmlspecialchars($user['email']); ?></td>
-                                    <td>
+                                    <!-- <td>
                                         <button class="btn btn-sm btn-primary edit-user" 
                                                 data-id="<?php echo $user['id']; ?>"
                                                 data-username="<?php echo htmlspecialchars($user['username']); ?>"
@@ -128,7 +128,7 @@ while($user = $result->fetch_assoc()) {
                                         <button class="btn btn-sm btn-danger delete-user" data-id="<?php echo $user['id']; ?>">
                                             <i class="fas fa-trash"></i>
                                         </button>
-                                    </td>
+                                    </td> -->
                                 </tr>
                                 <?php endforeach; ?>
                             </tbody>
